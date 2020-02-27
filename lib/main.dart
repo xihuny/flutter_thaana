@@ -158,6 +158,9 @@ class _HomeState extends State<Home> {
           TextField(
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.center,
+            style: TextStyle(
+              fontFamily: 'NotoSans'
+            ),
             controller: tec,
             onChanged: (s) {
               tec.text = thaana(s);
