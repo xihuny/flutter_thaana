@@ -147,6 +147,16 @@ class _HomeState extends State<Home> {
       return String.fromCharCode(s);
   }
 
+  _listener() {
+    tec.selection = TextSelection.collapsed(offset: tec.selection.start + 1);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    tec.addListener(_listener);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -154,17 +164,27 @@ class _HomeState extends State<Home> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Text('Enter text here'),
+          Text(
+            'ބޭނުން އެއްޗެއް ލިޔަންވީ',
+            style: TextStyle(
+                fontFamily: 'Faruma',
+                fontSize: 23,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            height: 15,
+          ),
           TextField(
             textDirection: TextDirection.rtl,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'NotoSans'
+              fontFamily: 'Faruma',
+              fontSize: 20,
             ),
             controller: tec,
             onChanged: (s) {
               tec.text = thaana(s);
-              tec.selection = TextSelection.collapsed(offset: tec.text.length);
+              //tec.selection = TextSelection.collapsed(offset: pos);
             },
           ),
         ],
