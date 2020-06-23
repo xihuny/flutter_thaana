@@ -40,6 +40,6 @@ flutter:
     - family: NotoSans
       fonts:
         - asset: fonts/NotoSans-Regular.ttf
-    - family: Faruma
+    - family: MVTypewriter
       fonts:
-        - asset: fonts/Faruma.ttf
+        - asset: fonts/MVTypewriter.ttf
