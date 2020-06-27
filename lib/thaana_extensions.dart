@@ -1,4 +1,72 @@
-final latinToThaanaMap = {
+/*
+* @author xihuny
+*
+* Extension methods to convert any String from
+* Latin to Thaana & Ascii to Thaana
+*
+* Usage:
+*   myString.convertLatinToThaana()
+*   myString.convertAsciiToThaana()
+*/
+
+extension ThaanaConversion on String {
+  String convertLatinToThaana() {
+    return asciiToThaana(latinToAscii(this));
+  }
+
+  String convertAsciiToThaana() {
+    return asciiToThaana(this);
+  }
+}
+
+/*
+* Ported from jaa's thaana conversion(php) library
+* https://github.com/jawish/thaana_conversions_php/blob/master/ThaanaConversions.php
+*/
+
+latinToAscii(String s) {
+  String output = '';
+  int i = 0;
+
+  // Standardize input to lowercase
+  String input = s.toLowerCase();
+
+  while (i <= input.length - 1) {
+    bool found = false;
+
+    // Loop through combination lengths
+    for (int c = 4; c > 0; c--) {
+      // Get combination
+      String comb =
+          input.substring(i, i + c > input.length ? input.length : i + c);
+
+      // Make sure combination is defined
+      if (latinToAsciiMap.containsKey(comb)) {
+        // Transliterate using the definition
+        output += latinToAsciiMap[comb];
+
+        // Move onto next combination
+        found = true;
+        i += c;
+        break;
+      }
+    }
+
+    // Check if there was transliteration failure
+    if (!found) {
+      // Add combination to output directly
+      output += input.substring(i, i + 1);
+      i++;
+    }
+  }
+  return output;
+}
+
+/*
+* Mapping for Latin Thaana to Ascii
+* The corpus used is very small and needs to be updated to get accurate results
+*/
+final latinToAsciiMap = {
   'a': 'wa',
   'aa': 'wA',
   'aajj': 'aqj',
@@ -36,14 +104,14 @@ final latinToThaanaMap = {
   'choa': 'cO',
   'ci': 'si',
   'co': 'ko',
-  'd': 'dq',
-  'da': 'da',
+  'd': 'Dq',
+  'da': 'Da',
   'daa': 'DA',
-  'dda': 'wqda',
+  'dda': 'wqDa',
   'dai': 'Dawi',
-  'de': 'de',
-  'dd': 'wqde',
-  'dee': 'dI',
+  'de': 'De',
+  'dd': 'wqDe',
+  'dee': 'DI',
   'dey': 'Deaq',
   'dha': 'da',
   'dhaa': 'dA',
@@ -56,13 +124,13 @@ final latinToThaanaMap = {
   'dhoa': 'dO',
   'dhu': 'du',
   'di': 'Di',
-  'ddi': 'wqdi',
-  'do': 'do',
+  'ddi': 'wqDi',
+  'do': 'Do',
   'dhw': 'dO',
   'doo': 'DU',
   'doa': 'DO',
   'du': 'Du',
-  'dy': 'dI',
+  'dy': 'DI',
   'e': 'we',
   'ee': 'wI',
   'eh': 'wewq',
@@ -74,7 +142,7 @@ final latinToThaanaMap = {
   'f': 'fq',
   'fa': 'fa',
   'faa': 'fA',
-  'fah': 'fawq',
+  'fah': 'faSq',
   'fahe': 'fahI',
   'fai': 'fawi',
   'faiy': 'fatq',
@@ -84,12 +152,14 @@ final latinToThaanaMap = {
   'ff': 'fq',
   'ffi': 'fi',
   'fi': 'fi',
+  'fo': 'fo',
   'foor': 'fUrq',
   'foos': 'fUsq',
   'foo': 'fU',
   'foa': 'fO',
   'fu': 'fu',
   'fy': 'fI',
+  'g': 'gq',
   'ga': 'ga',
   'gaa': 'gA',
   'gai': 'gawi',
@@ -102,6 +172,7 @@ final latinToThaanaMap = {
   'go': 'go',
   'goo': 'gU',
   'goa': 'gO',
+  'ggu': 'wqgu',
   'gu': 'gu',
   'h': 'wq',
   'ha': 'ha',
@@ -112,7 +183,7 @@ final latinToThaanaMap = {
   'hee': 'hI',
   'heed': 'hIdq',
   'heem': 'hImq',
-  'heh': 'hewq',
+  'heh': 'heSq',
   'hey': 'hE',
   'hi': 'hi',
   'ho': 'ho',
@@ -130,7 +201,8 @@ final latinToThaanaMap = {
   'jeed': 'jIdq',
   'jey': 'jE',
   'ji': 'ji',
-  'jjey': 'jE',
+  'jje': 'wqje',
+  'jjey': 'wqjE',
   'jo': 'jo',
   'joo': 'jU',
   'joa': 'jO',
@@ -138,7 +210,7 @@ final latinToThaanaMap = {
   'k': 'ku',
   'ka': 'ka',
   'kaa': 'kA',
-  'kah': 'kawq',
+  'kah': 'kaSq',
   'kaiy': 'katq',
   'ke': 'ke',
   'kee': 'kI',
@@ -188,7 +260,7 @@ final latinToThaanaMap = {
   'moo': 'mU',
   'moa': 'mO',
   'mu': 'mu',
-  'mudh': 'muwq',
+  'muh': 'muwq',
   'my': 'mI',
   'n': 'nq',
   'na': 'na',
@@ -218,11 +290,18 @@ final latinToThaanaMap = {
   'poo': 'pU',
   'poa': 'pO',
   'py': 'pI',
-  'q': 'gq',
-  'qa': 'qa',
-  'qaa': 'qA',
-  'qee': 'qI',
-  'qy': 'qI',
+  'q': 'Qq',
+  'qa': 'Qa',
+  'qaa': 'QA',
+  'qee': 'QI',
+  'qy': 'QI',
+  'qu': 'Qu',
+  'qoo': 'QU',
+  'qoa': 'QO',
+  'qey': 'QE',
+  'qi': 'Qi',
+  'qe': 'Qe',
+  'qqu': 'wqQu',
   'r': 'rq',
   'ra': 'ra',
   'raa': 'rA',
@@ -277,6 +356,7 @@ final latinToThaanaMap = {
   'thah': 'tawq',
   'the': 'te',
   'thee': 'tI',
+  'they': 'tE',
   'thi': 'ti',
   'tho': 'to',
   'thu': 'tu',
@@ -328,31 +408,78 @@ final latinToThaanaMap = {
   'zoa': 'zO',
   'zu': 'zu',
   'zy': 'zI',
-  "'n": 'n',
+  "'n": 'n'
 };
 
-latinToAscii(String s) {
-  String output = '';
-  int i = 0;
-  String input = s.toLowerCase();
+/*
+* Ported from kudanai's aThaanaUtils library for Android
+* https://github.com/kudanai/aThaanaUtils/blob/master/athaanautils/src/main/java/com/athaanautils/ThaanaConversions.java
+*/
 
-  while (i <= input.length - 1) {
-    bool found = false;
-    for (int c = 4; c > 0; c--) {
-      String comb =
-          input.substring(i, i + c > input.length ? input.length : i + c);
-      if (latinToThaanaMap.containsKey(comb)) {
-        output += latinToThaanaMap[comb];
-        found = true;
-        i += c;
-        break;
-      }
-    }
-
-    if (!found) {
-      output += input.substring(i, i + 1);
-      i++;
-    }
+String asciiToThaana(String s) {
+  String strThaana = '';
+  for (int i = 0; i < s.length; i++) {
+    strThaana +=
+        asciiToThaanaMap.containsKey(s[i]) ? asciiToThaanaMap[s[i]] : s[i];
   }
-  return output;
+  return strThaana;
 }
+
+// Mapping for single character to its equivalent Thaana letter
+final asciiToThaanaMap = {
+  'h': '\u0780',
+  'S': '\u0781',
+  'n': '\u0782',
+  'r': '\u0783',
+  'b': '\u0784',
+  'L': '\u0785',
+  'k': '\u0786',
+  'w': '\u0787',
+  'v': '\u0788',
+  'm': '\u0789',
+  'f': '\u078A',
+  'd': '\u078B',
+  't': '\u078C',
+  'l': '\u078D',
+  'g': '\u078E',
+  'N': '\u078F',
+  's': '\u0790',
+  'D': '\u0791',
+  'z': '\u0792',
+  'T': '\u0793',
+  'y': '\u0794',
+  'p': '\u0795',
+  'j': '\u0796',
+  'c': '\u0797',
+  'X': '\u0798',
+  'H': '\u0799',
+  'K': '\u079A',
+  'J': '\u079B',
+  'R': '\u079C',
+  'C': '\u079D',
+  'M': '\u079E',
+  'B': '\u079F',
+  'Y': '\u07A0',
+  'Z': '\u07A1',
+  'W': '\u07A2',
+  'G': '\u07A3',
+  'Q': '\u07A4',
+  'V': '\u07A5',
+  'a': '\u07A6',
+  'A': '\u07A7',
+  'i': '\u07A8',
+  'I': '\u07A9',
+  'u': '\u07AA',
+  'U': '\u07AB',
+  'e': '\u07AC',
+  'E': '\u07AD',
+  'o': '\u07AE',
+  'O': '\u07AF',
+  'q': '\u07B0',
+  'F': '\uFDF2',
+  '?': '\u061F',
+  'x': '\u00D7',
+  'P': '\u00F7',
+  ';': '\u061B',
+  ',': '\u060C'
+};

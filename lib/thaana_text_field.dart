@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_thaana/thaana_text_formatter.dart';
 
+/*
+* TextField widget with default settings of a
+* Thaana TextField (textDirection & fontFamily)
+*
+* Usage:
+*   ThaanaTextField(
+*     controller: myTextEditingController,
+*     style: TextStyle(...),
+*   );
+*/
+
 class ThaanaTextField extends StatefulWidget {
+  /*
+  * Declare additional properties of a TextField if required
+  * and pass it to the constructor
+  */
+
   final TextEditingController controller;
   final TextStyle style;
 
@@ -18,7 +34,7 @@ class _ThaanaTextFieldState extends State<ThaanaTextField> {
       textDirection: TextDirection.rtl,
       controller: widget.controller,
       inputFormatters: [
-        ThaanaTextFormatter(),
+        ThaanaTextFormatter(), // Using our custom ThaanaTextFormatter
       ],
       style: widget.style == null
           ? TextStyle(fontFamily: 'MVTypeWriter')

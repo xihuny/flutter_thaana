@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
-import 'package:flutter_thaana/ascii_to_thaana.dart';
-import 'package:flutter_thaana/latin_to_ascii.dart';
+
+import 'thaana_extensions.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -29,22 +29,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TextEditingController tec = TextEditingController();
   TextEditingController latinToThaanaController = TextEditingController();
 
   String latinToThaanaOutput = '';
 
   latinToThaana() {
     setState(() {
-      String ascii = latinToAscii(latinToThaanaController.text);
-      latinToThaanaOutput = thaana(ascii);
+      latinToThaanaOutput = latinToThaanaController.text.convertLatinToThaana();
     });
   }
 
-  flutterDisplayMode() async {
+  /*
+  * Flutter apps run at 60fps. By default you will get 60 fps even if your
+  * device's display refresh rate is greater than 60Hz. So, here telling the
+  * app to get all available display modes and use the best display mode
+  * supported by the device.
+  */
+  initFlutterDisplayMode() async {
     try {
+      // Fetch all the display modes supported by the device
       List<DisplayMode> modes = await FlutterDisplayMode.supported;
-      // Should check if high refresh rate mode is available
+
+      // I'm setting the best display mode for my device here. So, do a check
+      // and change accordingly.
       if (modes.length > 3) await FlutterDisplayMode.setMode(modes[2]);
     } on PlatformException catch (e) {
       debugPrint(e.message);
@@ -55,7 +62,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     latinToThaanaController.addListener(latinToThaana);
-    flutterDisplayMode();
+    initFlutterDisplayMode();
   }
 
   @override
@@ -142,8 +149,7 @@ class _HomeState extends State<Home> {
                 ),
                 highlightedBorderColor: Colors.white38,
                 onPressed: () {
-                  Clipboard.setData(
-                      new ClipboardData(text: latinToThaanaOutput));
+                  Clipboard.setData(ClipboardData(text: latinToThaanaOutput));
                 },
               ),
               SizedBox(
